@@ -6,7 +6,7 @@
 #    By: jsimelio <jsimelio@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/04/19 16:06:28 by jsimelio      #+#    #+#                  #
-#    Updated: 2021/04/22 15:18:50 by jsimelio      ########   odam.nl          #
+#    Updated: 2021/04/22 16:23:34 by jsimelio      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,35 +16,40 @@ ENV AUTOINDEX on
 
 RUN apt-get update && apt-get install -y \
 	wget \
-	nginx
+	nginx \
+    mariadb-server \
+	php7.3 \
+	php-mysql \
+	php-fpm \
+	php-pdo \
+	php-gd \
+	php-cli \
+	php-mbstring
 
-    # mariadb-server \
-	# php7.3 \
-	# php-mysql \
-	# php-fpm \
-	# php-pdo \
-	# php-gd \
-	# php-cli \
-	# php-mbstring
+# WORKDIR /var/www/html/
 
-WORKDIR /var/www/html/
+# COPY INIT.SH
+COPY ./srcs/init.sh ./
 
-# COPY ./srcs/init.sh /var/www/html/
-
+# NGINX CONF FILE && SIMLINK
 COPY ./srcs/nginx.conf /etc/nginx/sites-available
-
 RUN ln -s /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled/
 
-CMD service nginx start
+#SSL
+RUN mkdir ~/mkcert && cd ~/mkcert && \
+	wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64 && \
+	mv mkcert-v1.4.1-linux-amd64 mkcert && chmod +x mkcert && \
+	./mkcert -install && ./mkcert localhost
+	
+# INSTALL PHPMYADMIN
+RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.1/phpMyAdmin-5.0.1-english.tar.gz
+RUN tar -xf phpMyAdmin-5.0.1-english.tar.gz && rm -rf phpMyAdmin-5.0.1-english.tar.gz
+RUN mv phpMyAdmin-5.0.1-english phpmyadmin
 
-nginx -d 'daemon off;'
+# COPY PHPMYADMIN CONF FILE
+COPY ./srcs/config.inc.php phpmyadmin
 
-# # RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.1/phpMyAdmin-5.0.1-english.tar.gz
-# # RUN tar -xf phpMyAdmin-5.0.1-english.tar.gz && rm -rf phpMyAdmin-5.0.1-english.tar.gz
-# # RUN mv phpMyAdmin-5.0.1-english phpmyadmin
-
-# # COPY PHPMYADMIN CONF FILE
-# COPY ./srcs/config.inc.php phpmyadmin
+CMD bash init.sh && nginx -g 'daemon off;'
 
 # #INSTALL WORDPRESS
 # RUN wget https://wordpress.org/latest.tar.gz
