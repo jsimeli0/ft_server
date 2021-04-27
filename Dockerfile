@@ -6,7 +6,7 @@
 #    By: jsimelio <jsimelio@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/04/19 16:06:28 by jsimelio      #+#    #+#                  #
-#    Updated: 2021/04/22 19:10:09 by jsimelio      ########   odam.nl          #
+#    Updated: 2021/04/27 15:32:04 by jsimelio      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,21 +41,21 @@ RUN 	wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-
 		mv ./localhost.pem ./etc/nginx && \
 		mv ./localhost-key.pem ./etc/nginx
 
-# NGINX CONF FILE && SIMLINK
-# RUN 	mv /root/info.php /var/www/html && \
-# 		# mv /root/index.html /var/www/html && \
-# RUN		mv /root/index.sh . && \
-RUN		mv /root/nginx.conf /etc/nginx/sites-available/localhost && \
-		ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/ && \
-		nginx -t
+# # NGINX CONF FILE && SIMLINK
+# # RUN 	mv /root/info.php /var/www/html && \
+# # 		# mv /root/index.html /var/www/html && \
+# # RUN		mv /root/index.sh . && \
+# RUN		mv /root/nginx.conf /etc/nginx/sites-available/localhost && \
+# 		ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/ && \
+# 		nginx -t
 
-# # CONFIGURE NGINX WEB SERVER
-# RUN 		mv /root/info.php /var/www/html && \
-#         	mv /root/index.html /var/www/html && \
-# 			mv /root/index.sh . && \
-#         	mv /root/nginx.conf /etc/nginx/sites-available && \
-# 			ln -fs /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled && \
-# 			nginx -t
+# CONFIGURE NGINX WEB SERVER
+RUN 		mv /root/info.php /var/www/html && \
+        	mv /root/index.html /var/www/html && \
+			mv /root/index.sh . && \
+        	mv /root/nginx.conf /etc/nginx/sites-available && \
+			ln -fs /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled && \
+			nginx -t
 
 # CONFIGURE DATABASE
 RUN 	service mysql start && \
@@ -81,7 +81,7 @@ RUN		wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.p
 		wp core download --allow-root --path=var/www/html && \
 		mv /root/wp-config.php /var/www/html && \
 		service mysql restart && \
-		wp core install --allow-root --url=hostname --path=/var/www/html --title=Wordpress --admin_user=jsimelio \
+		wp core install --allow-root --url=localhost --path=/var/www/html --title=Wordpress --admin_user=jsimelio \
 		--admin_password=password --admin_email=jsimelio@student.codam.nl --skip-email
 
 # GRANT PERMISSIONS
