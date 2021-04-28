@@ -6,13 +6,11 @@
 #    By: jsimelio <jsimelio@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/04/19 16:06:28 by jsimelio      #+#    #+#                  #
-#    Updated: 2021/04/27 19:00:47 by jsimelio      ########   odam.nl          #
+#    Updated: 2021/04/28 20:08:59 by jsimelio      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 FROM	debian:buster
-
-ENV		autoindex=on
 
 LABEL 	maintainer="jsimelio@student.codam.nl"
 
